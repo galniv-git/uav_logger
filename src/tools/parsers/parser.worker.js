@@ -23,6 +23,8 @@ self.addEventListener('message', function (event) {
         }
         const [fileName, messageType] = event.data.type.split('@')
         parsers[fileName].loadType(messageType.split('[')[0])
+    } else if (event.data.action === 'syncTime') {
+        parsers[event.data.fileName].syncTime(event.data.value)
     } else if (event.data.action === 'trimFile') {
         throw new Error('not implemented')
         // parser.trimFile(event.data.time)

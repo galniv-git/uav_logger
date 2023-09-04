@@ -18,6 +18,8 @@
                 <!-- Plot -->
                 <a :class="selected === 'plot' ? 'selected' : ''" @click="selected='plot'"
                    v-if="state.processDone"> <i class="fas fa-chart-line"></i>Plot</a>
+                <a :class="selected === 'sync-times' ? 'selected' : ''" @click="selected='sync-times'"
+                   v-if="state.processDone"> <i class="fas fa-clock"></i>Sync Times</a>
                 <!-- more -->
                 <a :class="selected ==='other' ? 'selected' : ''" @click="selected='other'" v-if="state.processDone">
                     <i class="fas fa-ellipsis-v"></i>
@@ -27,7 +29,9 @@
         <!-- TOGGLE MENU -->
         <div class="menu-list">
             <b-collapse class="menu-content collapse out" id="menucontent" visible>
-
+                <div :style="{display: selected==='sync-times' ? '' : 'none' }">
+                    <timeSync/>
+                </div>
                 <div :style="{display: selected==='plot' ? '' : 'none' }">
                     <plotSetup/>
                     <message-menu/>
@@ -128,6 +132,7 @@ import Dropzone from './SideBarFileManager.vue'
 import MessageMenu from './SideBarMessageMenu.vue'
 import {store} from './Globals.js'
 import PlotSetup from './PlotSetup.vue'
+import TimeSync from './TimeSync.vue'
 
 export default {
     name: 'sidebar',
@@ -220,7 +225,7 @@ export default {
             this.downloadURL = URL.createObjectURL(this.blob)
         }
     },
-    components: {PlotSetup, MessageMenu, Dropzone}
+    components: {PlotSetup, MessageMenu, Dropzone, TimeSync}
 }
 </script>
 <style scoped>

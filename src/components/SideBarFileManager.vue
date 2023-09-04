@@ -57,6 +57,7 @@ export default {
     },
     created () {
         this.$eventHub.$on('loadType', this.loadType)
+        this.$eventHub.$on('syncTime', this.syncTime)
         this.$eventHub.$on('trimFile', this.trimFile)
     },
     beforeDestroy () {
@@ -128,6 +129,13 @@ export default {
             worker.postMessage({
                 action: 'loadType',
                 type: type
+            })
+        },
+        syncTime: function (key, value) {
+            worker.postMessage({
+                action: 'syncTime',
+                fileName: key,
+                value: value
             })
         },
         process: function (file) {
@@ -211,9 +219,13 @@ export default {
     },
     mounted () {
         worker.onmessage = (event) => {
+            if (event.data.timeSyncFinished) {
+                this.$eventHub.$emit('resetPlot')
+            }
             if (event.data.percentage) {
                 this.state.processPercentage = event.data.percentage
             } else if (event.data.availableMessages) {
+                this.$set(this.state, 'fileNames', [...(this.state.fileNames || []), event.data.fileName])
                 this.$eventHub.$emit('messageTypes', {
                     messageTypes: event.data.availableMessages,
                     fileName: event.data.fileName

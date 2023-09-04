@@ -202,6 +202,7 @@ export default {
         this.$eventHub.$on('togglePlot', this.togglePlot)
         this.$eventHub.$on('addPlots', this.addPlots)
         this.$eventHub.$on('plot', this.plot)
+        this.$eventHub.$on('resetPlot', this.resetPlot)
         this.$eventHub.$on('clearPlot', this.clearPlot)
     },
     beforeDestroy () {
@@ -220,6 +221,10 @@ export default {
         }
     },
     methods: {
+        resetPlot () {
+            this.cache = {}
+            this.plot()
+        },
         popupButton () {
             return {
                 name: 'Open in new window',
