@@ -243,10 +243,15 @@ export class DataflashDataExtractor {
         }
     }
 
+    static getKey (messages, keyName) {
+        return Object.keys(messages).find((key) => key.split('@')[1] === keyName)
+    }
+
     static extractDefaultParams (messages) {
         const params = {}
-        if ('PARM' in messages) {
-            const paramData = messages.PARM
+        const parmKey = this.getKey(messages, 'PARM')
+        if (parmKey in messages) {
+            const paramData = messages[parmKey]
             const range = [...Array(paramData.Name.length).keys()]
             if (paramData.Default === undefined) {
                 return {}
@@ -260,8 +265,9 @@ export class DataflashDataExtractor {
 
     static extractParams (messages) {
         const params = []
-        if ('PARM' in messages) {
-            const paramData = messages.PARM
+        const parmKey = this.getKey(messages, 'PARM')
+        if (parmKey in messages) {
+            const paramData = messages[parmKey]
             for (const i in paramData.time_boot_ms) {
                 params.push(
                     [
@@ -272,8 +278,9 @@ export class DataflashDataExtractor {
                 )
             }
         }
-        if ('PARAM_VALUE' in messages) {
-            const paramData = messages.PARAM_VALUE
+        const parmValueKey = this.getKey(messages, 'PARAM_VALUE')
+        if (parmValueKey in messages) {
+            const paramData = messages[parmValueKey]
             for (const i in paramData.time_boot_ms) {
                 params.push(
                     [

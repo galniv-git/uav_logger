@@ -176,21 +176,23 @@ export default {
             }
             return logDocs
         },
-        handleMessageTypes (messageTypes) {
+        handleMessageTypes ({ messageTypes, fileName }) {
             if (this.$route.query.plots) {
                 this.state.plotOn = true
             }
             const newMessages = {}
             // populate list of message types
-            for (const messageType of Object.keys(messageTypes)) {
-                this.$set(this.checkboxes, messageType, messageTypes[messageType].expressions.expressions)
-                newMessages[messageType] = messageTypes[messageType]
+            for (const key of Object.keys(messageTypes)) {
+                const messageType = `${fileName}@${key}`
+                this.$set(this.checkboxes, messageType, messageTypes[key].expressions.expressions)
+                newMessages[messageType] = messageTypes[key]
             }
             // populate checkbox status
-            for (const messageType of Object.keys(messageTypes)) {
+            for (const key of Object.keys(messageTypes)) {
+                const messageType = `${fileName}@${key}`
                 this.checkboxes[messageType] = { expressions: {} }
                 // for (let field of this.getMessageNumericField(this.state.messages[messageType][0])) {
-                for (const field of messageTypes[messageType].expressions) {
+                for (const field of messageTypes[key].expressions) {
                     if (this.state.plotOn) {
                         this.checkboxes[messageType].expressions[field] =
                             this.$route.query?.plots?.indexOf(messageType + '.' + field) !== -1
@@ -199,8 +201,8 @@ export default {
                     }
                 }
             }
-            this.messageTypes = newMessages
-            this.$set(this.state, 'messageTypes', newMessages)
+            this.messageTypes = { ...newMessages, ...this.messageTypes }
+            this.$set(this.state, 'messageTypes', this.messageTypes)
         },
         isPlotted (message, field) {
             const fullname = message + '.' + field

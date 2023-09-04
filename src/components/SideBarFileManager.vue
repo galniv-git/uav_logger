@@ -141,6 +141,7 @@ export default {
                 worker.postMessage({
                     action: 'parse',
                     file: data,
+                    filename: file.name.split('.')[0],
                     isTlog: (file.name.endsWith('tlog'))
                 })
             }
@@ -213,7 +214,10 @@ export default {
             if (event.data.percentage) {
                 this.state.processPercentage = event.data.percentage
             } else if (event.data.availableMessages) {
-                this.$eventHub.$emit('messageTypes', event.data.availableMessages)
+                this.$eventHub.$emit('messageTypes', {
+                    messageTypes: event.data.availableMessages,
+                    fileName: event.data.fileName
+                })
             } else if (event.data.metadata) {
                 this.state.metadata = event.data.metadata
             } else if (event.data.messages) {
