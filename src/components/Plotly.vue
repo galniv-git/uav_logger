@@ -670,7 +670,10 @@ export default {
                 x = this.state.messages[messages[0]].time_boot_ms
             } else {
                 try {
-                    x = this.state.messages.ATT.time_boot_ms
+                    //  get the time_boot_ms from the first message which its key starts with ATT
+                    const keys = Object.keys(this.state.messages)
+                    const key = keys.find(key => key.includes('ATT'))
+                    x = this.state.messages[key].time_boot_ms
                 } catch {
                     x = this.state.messages.ATTITUDE.time_boot_ms
                 }
